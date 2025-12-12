@@ -159,7 +159,7 @@ def main():
     st.sidebar.title("Navigation")
     page = st.sidebar.radio(
         "Choose a section:",
-        ["📊 Data Explorer", "🔧 Fit Model", "📈 Visualizations", "🌌 Distance Calculator", "🤖 AI Assistant (MCP)"]
+        ["📊 Data Explorer", "🔧 Fit Model", "🌌 Distance Calculator", "🤖 AI Assistant (MCP)"]
     )
     
     # Load data
@@ -303,81 +303,7 @@ def main():
     # ========================================================================
     # PAGE 3: VISUALIZATIONS
     # ========================================================================
-    elif page == "📈 Visualizations":
-        st.markdown('<p class="section-header">Visualizations</p>', unsafe_allow_html=True)
-        
-        if 'fitted_slope' not in st.session_state:
-            st.warning("⚠️ Please fit the model first in the 'Fit Model' section.")
-        else:
-            x_data = st.session_state['x_data']
-            y_data = st.session_state['y_data']
-            y_errors = st.session_state['y_errors']
-            fitted_slope = st.session_state['fitted_slope']
-            fitted_intercept = st.session_state['fitted_intercept']
-            slope_error = st.session_state['slope_error']
-            intercept_error = st.session_state['intercept_error']
-            
-            # Calculate model and residuals
-            y_model = period_luminosity_model(x_data, fitted_slope, fitted_intercept)
-            residuals = y_data - y_model
-            
-            # Create figure
-            fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 10), 
-                                          gridspec_kw={'height_ratios': [3, 1], 'hspace': 0.3})
-            
-            # Top panel: Data + Fit
-            ax1.errorbar(x_data, y_data, yerr=y_errors, 
-                        fmt='o', color='steelblue', markersize=8, 
-                        capsize=4, capthick=1.5, elinewidth=1.5,
-                        label='OGLE LMC Cepheids', alpha=0.7, zorder=2)
-            
-            x_model = np.linspace(x_data.min(), x_data.max(), 100)
-            y_model_smooth = period_luminosity_model(x_model, fitted_slope, fitted_intercept)
-            ax1.plot(x_model, y_model_smooth, 'r-', linewidth=2.5, 
-                    label=f'Best fit: I = {fitted_slope:.2f} log₁₀(P) + {fitted_intercept:.2f}', 
-                    zorder=3)
-            
-            ax1.set_xlabel('log₁₀(Period [days])', fontsize=14, fontweight='bold')
-            ax1.set_ylabel('I-band Magnitude', fontsize=14, fontweight='bold')
-            ax1.set_title('Cepheid Period-Luminosity Relation (LMC)', 
-                         fontsize=16, fontweight='bold', pad=15)
-            ax1.legend(loc='best', fontsize=12, framealpha=0.9)
-            ax1.grid(True, alpha=0.3, linestyle='--')
-            ax1.invert_yaxis()
-            
-            # Add parameter box
-            textstr = f'Slope: {fitted_slope:.3f} ± {slope_error:.3f}\n'
-            textstr += f'Intercept: {fitted_intercept:.3f} ± {intercept_error:.3f}'
-            props = dict(boxstyle='round', facecolor='wheat', alpha=0.8)
-            ax1.text(0.05, 0.95, textstr, transform=ax1.transAxes, fontsize=11,
-                    verticalalignment='top', bbox=props)
-            
-            # Bottom panel: Residuals
-            ax2.errorbar(x_data, residuals, yerr=y_errors,
-                        fmt='o', color='darkgreen', markersize=6,
-                        capsize=3, capthick=1, elinewidth=1,
-                        alpha=0.7, zorder=2)
-            ax2.axhline(y=0, color='red', linestyle='--', linewidth=2, 
-                       label='Zero residual', zorder=1)
-            ax2.set_xlabel('log₁₀(Period [days])', fontsize=14, fontweight='bold')
-            ax2.set_ylabel('Residuals (Obs - Model)', fontsize=14, fontweight='bold')
-            ax2.set_title('Residuals Plot', fontsize=14, fontweight='bold')
-            ax2.legend(loc='best', fontsize=11)
-            ax2.grid(True, alpha=0.3, linestyle='--')
-            
-            rms_residual = np.sqrt(np.mean(residuals**2))
-            ax2.axhline(y=rms_residual, color='gray', linestyle=':', linewidth=1.5, alpha=0.7)
-            ax2.axhline(y=-rms_residual, color='gray', linestyle=':', linewidth=1.5, alpha=0.7)
-            
-            st.pyplot(fig)
-            
-            # Download button
-            st.download_button(
-                label="📥 Download Figure",
-                data=fig,
-                file_name="cepheids_pl_relation.png",
-                mime="image/png"
-            )
+    
     
     # ========================================================================
     # PAGE 4: DISTANCE CALCULATOR
